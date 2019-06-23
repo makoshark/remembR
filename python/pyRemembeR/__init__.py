@@ -1,1 +1,1 @@
-from .remember.py import Remember
+from .remember import Remember

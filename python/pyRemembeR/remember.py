@@ -31,7 +31,7 @@ class Remember(object):
     @staticmethod
     def _remember_item(x):
         if type(x) == pd.DataFrame:
-            rx = pandas2ri.py2ri(x)
+            rx = pandas2ri.py2rpy(x)
 
         elif type(x) == dict:
             rx = Remember._remember_dict(x)

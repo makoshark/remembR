@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pyRemembeR',
-      version='0.1.3',
+      version='0.1.4',
       description='A simple utility for data scientists to save intermediate objects from either R or python.',
       utl='http://github.com/groceryheist/pyRemembeR',
       author='Nate TeBlunthuis',
