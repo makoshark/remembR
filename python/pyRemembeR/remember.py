@@ -1,4 +1,3 @@
-import feather
 import rpy2
 import filelock
 import rpy2.robjects as ro
@@ -18,16 +17,7 @@ class Remember(object):
         self.r = {}
 
     def _remember_dict(r, robj=None):
-        
-        for var_name, x in r.items():
-            rx = Remember._remember_item(x)
-
-            if robj is None:
-                robj = ro.ListVector({var_name : rx})
-
-            else:
-                robj.rx[var_name] = rx
-        return(robj)
+        return ro.ListVector{name:Remember._remember_item(x) for name, x in r.items()}
 
     @staticmethod
     def _remember_item(x):
