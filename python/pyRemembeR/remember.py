@@ -17,7 +17,7 @@ class Remember(object):
         self.remember_file = f
         self.r = {}
 
-    def _remember_dict(self, r, robj=None):
+    def _remember_dict(r, robj=None):
         
         for var_name, x in r.items():
             rx = Remember._remember_item(x)
@@ -69,8 +69,6 @@ class Remember(object):
                 if update == True:
                     readRDS = ro.r("readRDS")
                     robj = readRDS(self.remember_file)
-        else:
-            robj = None
 
         robj = Remember._remember_dict(self.r, robj)
         saveRDS = ro.r("saveRDS")
