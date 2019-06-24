@@ -22,8 +22,7 @@ class Remember(object):
             return new
 
         else:
-            old = robj.items()
-            return {**old.items, **new.items()}
+            return {**robj.items(), **new.items()}
 
     @staticmethod
     def _remember_item(x):
