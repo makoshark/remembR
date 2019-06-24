@@ -71,14 +71,11 @@ class Remember(object):
                     robj = readRDS(self.remember_file)
                     robj = Remember._remember_dict(self.r, robj)
 
-                saveRDS = ro.r("saveRDS")
-                saveRDS(robj, self.remember_file)
+        saveRDS = ro.r("saveRDS")
+        saveRDS(robj, self.remember_file)
 
     def set_namespace(self, namespace=""):
         self.namespace = namespace
 
     def set_file(self, f):
         self.remember_file = f
-
-if __name__ == "__main__":
-    unittest.main()
