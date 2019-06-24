@@ -69,6 +69,8 @@ class Remember(object):
                 if update == True:
                     readRDS = ro.r("readRDS")
                     robj = readRDS(self.remember_file)
+        else:
+            robj = None
 
         robj = Remember._remember_dict(self.r, robj)
         saveRDS = ro.r("saveRDS")
