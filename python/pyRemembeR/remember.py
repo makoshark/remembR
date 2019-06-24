@@ -17,7 +17,13 @@ class Remember(object):
         self.r = {}
 
     def _remember_dict(r, robj=None):
-        return ro.ListVector{name:Remember._remember_item(x) for name, x in r.items()}
+        new = ro.ListVector({name:Remember._remember_item(x) for name, x in r.items()})
+        if robj is None:
+            return new
+
+        else:
+            old = robj.items()
+            return {**old.items, **new.items()}
 
     @staticmethod
     def _remember_item(x):
