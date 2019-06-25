@@ -22,7 +22,7 @@ class Remember(object):
             return new
 
         else:
-            return ro.ListVector({**robj.items(), **new.items()})
+            return ro.ListVector({**dict(robj.items()), **dict(new.items())})
 
     @staticmethod
     def _remember_item(x):
