@@ -1,33 +1,39 @@
-remembr.file <<- "remembr.RDS"
-remembr.file.lock <<- paste0(remembr.file,"_LOCK")
-remembr.prefix  <<- ""
+library(filelock)
 
-remembr <- function(var,name,lock=T){
+remember.file <<- "remembr.RDS"
+remember.file.lock <<- paste0(remember.file,"_LOCK")
+remember.prefix  <<- ""
+
+set.remember.prefix <- function(prefix){
+    remember.prefix <<- prefix
+}
+
+remember <- function(var,name,lock=T){
 
     if(exists("r") == FALSE){
-        if(file.exists(remembr.file)){
-            lck  <- lock(remembr.file.lock, exclusive = FALSE)
-            r <<- readRDS(remembr.file)
+        if(file.exists(remember.file)){
+            lck  <- lock(remember.file.lock, exclusive = FALSE)
+            r <<- readRDS(remember.file)
             unlock(lck)
         } else {
             r <<- list()
         }
     }
 
-    if(remembr.prefix == ""){
+    if(remember.prefix == ""){
         r[[name]] <<- var
     } else {
-        if(is.null(r[[remembr.prefix]])){
-            r[[remembr.prefix]]  <<- list()
+        if(is.null(r[[remember.prefix]])){
+            r[[remember.prefix]]  <<- list()
         }
-        r[[remembr.prefix]][[name]]  <<- var
+        r[[remember.prefix]][[name]]  <<- var
     }
 
-    save_remembr()
+    save_remember()
 }
 
-save_remembr <- function(lock=T){
-    lck  <- lock(remembr.file.lock,exclusive=TRUE)
-    saveRDS(r,file=remembr.file)
+save_remember <- function(lock=T){
+    lck  <- lock(remember.file.lock, exclusive=TRUE)
+    saveRDS(r,file=remember.file)
     unlock(lck)
 }
