@@ -1,8 +1,17 @@
 library(filelock)
 
 remember.file <<- "remembr.RDS"
-remember.file.lock <<- paste0(remember.file,"_LOCK")
+init.file.lock <- function(){
+    remember.file.lock <<- paste0(remember.file,"_LOCK")
+}
+
 remember.prefix  <<- ""
+
+change.remember.file <- function(file){
+    remember.file <<- file
+    init.file.lock()
+    save.remember()
+}
 
 set.remember.prefix <- function(prefix){
     remember.prefix <<- prefix
