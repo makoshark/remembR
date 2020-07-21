@@ -33,6 +33,9 @@ class Remember(object):
         elif type(x) == dict:
             rx = Remember._remember_dict(x)
 
+        elif type(x) == datetime.datetime:
+            rx = x.isoformat()
+
         else:
             rx = x
 

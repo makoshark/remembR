@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='pyRemembeR',
       version='0.2.0',
@@ -7,7 +7,7 @@ setup(name='pyRemembeR',
       author='Nate TeBlunthuis',
       author_email='nathante@uw.edu',
       license='GPL3',
-      packages=['pyRemembeR'],
+      packages=find_packages(),
       install_requires=[
           'rpy2>=3.0.4',
           'filelock>=3.0.12',
