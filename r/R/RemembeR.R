@@ -21,6 +21,8 @@ remember <- function(var,name,lock=T){
 
     if(exists("r") == FALSE){
         if(file.exists(remember.file)){
+            if(!exists("remember.file.lock"))
+                init.file.lock()
             lck  <- lock(remember.file.lock, exclusive = FALSE)
             r <<- readRDS(remember.file)
             unlock(lck)
@@ -42,6 +44,9 @@ remember <- function(var,name,lock=T){
 }
 
 save_remember <- function(lock=T){
+    if(!exists("remember.file.lock"))
+        init.file.lock()
+    
     lck  <- lock(remember.file.lock, exclusive=TRUE)
     saveRDS(r,file=remember.file)
     unlock(lck)
