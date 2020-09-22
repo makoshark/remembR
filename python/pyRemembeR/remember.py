@@ -37,6 +37,9 @@ class Remember(object):
         elif type(x) == datetime.datetime:
             rx = x.isoformat()
 
+        elif type(x) == datetime.date:
+            rx = x.isoformat()
+
         else:
             rx = x
 
@@ -71,7 +74,7 @@ class Remember(object):
 
         robj = Remember._remember_dict(self.r, robj)
         saveRDS = ro.r("saveRDS")
-        saveRDS(robj, self.remember_file)
+        saveRDS(robj, self.remember_file, version=2)
 
     def set_namespace(self, namespace=""):
         self.namespace = namespace
