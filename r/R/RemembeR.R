@@ -9,6 +9,7 @@ remember.prefix  <<- ""
 
 change.remember.file <- function(file){
     remember.file <<- file
+    load.if.exists()
     init.file.lock()
     save.remember()
 }
@@ -17,19 +18,19 @@ set.remember.prefix <- function(prefix){
     remember.prefix <<- prefix
 }
 
+load.if.exists <- function(){
+    if(file.exists(remember.file)){
+        if(!exists("remember.file.lock"))
+            init.file.lock()
+        lck  <- lock(remember.file.lock, exclusive = FALSE)
+        r <<- readRDS(remember.file)
+        unlock(lck)
+    }
+}
+
 remember <- function(var,name,lock=T){
 
-    if(exists("r") == FALSE){
-        if(file.exists(remember.file)){
-            if(!exists("remember.file.lock"))
-                init.file.lock()
-            lck  <- lock(remember.file.lock, exclusive = FALSE)
-            r <<- readRDS(remember.file)
-            unlock(lck)
-        } else {
-            r <<- list()
-        }
-    }
+    load.if.exists()
 
     if(remember.prefix == ""){
         r[[name]] <<- var
@@ -40,10 +41,10 @@ remember <- function(var,name,lock=T){
         r[[remember.prefix]][[name]]  <<- var
     }
 
-    save_remember()
+    save.remember()
 }
 
-save_remember <- function(lock=T){
+save.remember <- function(lock=T){
     if(!exists("remember.file.lock"))
         init.file.lock()
     
