@@ -25,6 +25,8 @@ load.if.exists <- function(){
         lck  <- lock(remember.file.lock, exclusive = FALSE)
         r <<- readRDS(remember.file)
         unlock(lck)
+    } else {
+        r <<- list()
     }
 }
 
