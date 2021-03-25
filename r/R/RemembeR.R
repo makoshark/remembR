@@ -1,5 +1,21 @@
 library(filelock)
 
+init.remember <- function(){
+
+    if(exists("r") == FALSE){
+        if(file.exists(remember.file)){
+            if(!exists("remember.file.lock"))
+                init.file.lock()
+            lck  <- lock(remember.file.lock, exclusive = FALSE)
+            r <<- readRDS(remember.file)
+            unlock(lck)
+        } else {
+            r <<- list()
+        }
+    }
+
+}
+
 remember.file <<- "remembr.RDS"
 init.file.lock <- function(){
     remember.file.lock <<- paste0(remember.file,"_LOCK")
@@ -7,13 +23,18 @@ init.file.lock <- function(){
 
 remember.prefix  <<- ""
 
-change.remember.file <- function(file){
-    remember.file <<- file
-    load.if.exists()
-    init.file.lock()
-    save.remember()
-}
 
+change.remember.file <- function(file,clear=FALSE){
+    if(!clear){
+        remember.file <<- file
+        init.file.lock()
+        save.remember()
+    } else {
+        remember.file <<- file
+        rm(r,pos=globalenv())
+        init.remember()
+    }
+}
 set.remember.prefix <- function(prefix){
     remember.prefix <<- prefix
 }
@@ -31,6 +52,8 @@ load.if.exists <- function(){
 }
 
 remember <- function(var,name,lock=T){
+
+    init.remember()
 
     load.if.exists()
 
