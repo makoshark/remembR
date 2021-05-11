@@ -77,3 +77,4 @@ save.remember <- function(lock=T){
     saveRDS(r,file=remember.file)
     unlock(lck)
 }
+init.remember()
