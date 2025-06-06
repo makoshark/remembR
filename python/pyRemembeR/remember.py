@@ -7,8 +7,6 @@ from rpy2.robjects.packages import importr
 from rpy2.robjects.conversion import localconverter
 import pandas as pd
 import datetime
-pandas2ri.activate()
-numpy2ri.activate()
 
 class Remember(object):
     def __init__(self, f="remember.RDS"):
@@ -29,7 +27,7 @@ class Remember(object):
     def _remember_item(x):
         if type(x) == pd.DataFrame:
             with localconverter(ro.default_converter + pandas2ri.converter):
-                rx = ro.conversion.py2rpy(x)
+                rx = ro.conversion.get_conversion().py2rpy(x)
 
         elif type(x) == dict:
             rx = Remember._remember_dict(x)

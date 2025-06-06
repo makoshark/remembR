@@ -9,7 +9,7 @@ setup(name='pyRemembeR',
       license='GPL3',
       packages=find_packages(),
       install_requires=[
-          'rpy2>=3.0.4',
+          'rpy2>=3.6.0',
           'filelock>=3.0.12',
           'feather-format>=0.4.0'
       ],
