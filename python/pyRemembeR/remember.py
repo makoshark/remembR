@@ -1,7 +1,7 @@
 import rpy2
 import filelock
 import rpy2.robjects as ro
-from os import path
+from pathlib import Path
 from rpy2.robjects import pandas2ri, numpy2ri
 from rpy2.robjects.packages import importr
 from rpy2.robjects.conversion import localconverter
@@ -62,7 +62,7 @@ class Remember(object):
     def save_to_r(self, update=True):
         
         robj = None
-        if path.exists(self.remember_file):
+        if Path(self.remember_file).exists():
 
             lock = filelock.FileLock("{0}.lock".format(self.remember_file))
             with lock:
