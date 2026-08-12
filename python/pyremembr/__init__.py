@@ -1,1 +1,1 @@
-from .remember import Remember
+from .remember import Remember, script_stem

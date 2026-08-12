@@ -2,7 +2,7 @@ import unittest
 import rpy2
 import rpy2.robjects as ro
 import pandas as pd
-from pyRemembeR import Remember
+from pyremembr import Remember
 
 class TestRemember(unittest.TestCase):
     def test_pd(self):
