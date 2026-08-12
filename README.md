@@ -12,10 +12,10 @@ rather than literals. A number can then only be wrong the way the
 analysis is wrong.
 
 This is a fork of [RemembR][] and [pyRemembeR][] by Nathan
-TeBlunthuis, GPL-3, and keeps their API. The differences are described
-at the bottom. Both upstream histories are here in full, rewritten
-into the subdirectories their packages now occupy, so `git log
---follow` reaches every earlier revision of these files.
+TeBlunthuis, GPL-3, and keeps their API. Both upstream histories are
+here in full, rewritten into the subdirectories their packages now
+occupy, so `git log --follow` reaches every earlier revision of these
+files.
 
 [RemembR]: https://github.com/groceryheist/RemembR
 [pyRemembeR]: https://github.com/groceryheist/pyRembr
@@ -152,31 +152,3 @@ and `POSIXct` in UTC when they carry a time. `null` comes back as
 `NA`. Column order is carried explicitly because JSON objects have
 none a reader can rely on. Infinities are refused, since JSON has no
 spelling for them.
-
-## What this fork changes
-
-**A JSON target, alongside the RDS one.** Upstream achieves
-interoperability at write time, by having Python write R's format
-through rpy2. Doing it at read time instead—each language writes what
-it can write natively, and the R reader merges—drops the interpreter
-requirement, at the cost of a schema for the types JSON cannot express
-on its own.
-
-**One store per script rather than one shared store.** Upstream
-re-reads the store before every write so that several processes can
-append to it, guarded by a file lock. That also means a name outlives
-the code that recorded it: rename a quantity and the old name stays in
-the store, still citable and now stale. Writing one store per script
-and merging at read time makes each store reflect exactly what its
-script currently records, and removes the need for the lock. The
-shared-store behaviour is still available by pointing several scripts
-at one file with `change.remember.file()`.
-
-**The reading half.** Upstream leaves loading to the document, which
-reads a single file directly. Merging several stores across two
-formats is enough work, and enough of a place to get a wrong number,
-that it belongs in the library with the duplicate-name check.
-
-**Optional names in R** (`remember(x)` files under `"x"`), and
-consistent spelling: the project, the R module, and the Python module
-are `remembR`, `remembR.R`, and `remembr.py`.
