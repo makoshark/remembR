@@ -46,10 +46,13 @@ remember(nrow(final.df), "n.article.weeks")
 remember(divergence.slope)           # filed under "divergence.slope"
 ```
 
-`remember()` files a value in the list `r` and writes the store on
-every call, so a run that dies partway through still leaves what it
-got to. Called without a name it uses the expression itself, which
-keeps the name in the paper and the name in the code identical.
+`remember()` files a value away and writes the store on every call, so
+a run that dies partway through still leaves what it got to. Called
+without a name it uses the expression itself, which keeps the name in
+the paper and the name in the code identical. What has been recorded
+lives in the package rather than in the script's own environment;
+`remembered()` returns it, and `remember.file()` says where it is
+being written.
 
 `remember.to(dir, suffix)` points the store at
 `<dir>/<script><-suffix>.RDS`. The suffix distinguishes runs of one

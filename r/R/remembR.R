@@ -17,17 +17,38 @@
 ## Derived from RemembR and pyRemembeR by Nathan TeBlunthuis
 ## <nathante@uw.edu>, GPL-3. Divergences are described in README.md.
 
-## The store this session writes to. remember.to() sets it from the
-## running script's name, which is the usual way to name it.
-remember.file <- "remembr.RDS"
+## Everything this session has recorded, where it will be written, and
+## the namespace values are filed under. This lives in an environment
+## of its own rather than in the caller's, so that recording a value
+## changes nothing the analytic script can see except through the
+## functions below, and so that the R half can go to CRAN, which does
+## not allow a package to write to the global environment.
+##
+##   values  the recorded list, reachable with remembered()
+##   file    the store, set by remember.to() or change.remember.file()
+##   prefix  a namespace; when set, values are filed under
+##           values[[prefix]][[name]] rather than values[[name]], which
+##           lets one script record the same quantities for several
+##           inputs without collisions
+.remembr <- new.env(parent = emptyenv())
+.remembr$values <- list()
+.remembr$file <- "remembr.RDS"
+.remembr$prefix <- ""
 
-## An optional namespace. When set, values are filed under
-## r[[prefix]][[name]] rather than r[[name]], which lets one script
-## record the same quantities for several inputs without collisions.
-remember.prefix <- ""
+## What has been recorded so far, as a list, and where it is being
+## written. Reading a store back is load.remembered()'s job; these are
+## for a script that wants to look at its own work.
+remembered <- function (name) {
+    if (missing(name)) {
+        .remembr$values
+    } else {
+        .remembr$values[[name]]
+    }
+}
 
-## Values recorded so far this session.
-if (!exists("r")) { r <- list() }
+remember.file <- function () {
+    .remembr$file
+}
 
 ## Name of the running script, without directory or extension. Used to
 ## name its store, so the name lives in one place.
@@ -49,7 +70,6 @@ remember.to <- function (dir = ".", suffix, stem = script.stem()) {
     }
     dir.create(dir, showWarnings = FALSE, recursive = TRUE)
     change.remember.file(file.path(dir, paste0(stem, ".RDS")))
-    invisible(remember.file)
 }
 
 ## Record one value. Called without a name it uses the expression
@@ -62,13 +82,13 @@ remember <- function (var, name, save = TRUE, silent = FALSE) {
         name <- deparse(substitute(var))
     }
 
-    if (remember.prefix == "") {
-        r[[name]] <<- var
+    if (.remembr$prefix == "") {
+        .remembr$values[[name]] <- var
     } else {
-        if (is.null(r[[remember.prefix]])) {
-            r[[remember.prefix]] <<- list()
+        if (is.null(.remembr$values[[.remembr$prefix]])) {
+            .remembr$values[[.remembr$prefix]] <- list()
         }
-        r[[remember.prefix]][[name]] <<- var
+        .remembr$values[[.remembr$prefix]][[name]] <- var
     }
 
     if (!silent) {
@@ -83,20 +103,20 @@ remember <- function (var, name, save = TRUE, silent = FALSE) {
 }
 
 save.remember <- function () {
-    saveRDS(r, file = remember.file)
-    invisible(remember.file)
+    saveRDS(.remembr$values, file = .remembr$file)
+    invisible(.remembr$file)
 }
 
 ## Drop everything recorded so far. Passing clear=FALSE to
 ## change.remember.file() keeps the current values and writes them to
 ## the new location instead.
 forget <- function () {
-    r <<- list()
+    .remembr$values <- list()
     invisible(NULL)
 }
 
 change.remember.file <- function (file, clear = TRUE) {
-    remember.file <<- file
+    .remembr$file <- file
     if (clear) {
         forget()
     } else {
@@ -106,7 +126,7 @@ change.remember.file <- function (file, clear = TRUE) {
 }
 
 set.remember.prefix <- function (prefix = "") {
-    remember.prefix <<- prefix
+    .remembr$prefix <- prefix
     invisible(prefix)
 }
 
